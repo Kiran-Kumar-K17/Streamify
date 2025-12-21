@@ -1,4 +1,6 @@
 import { User } from "../models/user.model.js";
+import { v4 as uuidv4 } from "uuid";
+import { setUser, getUser } from "../utils/auth.js";
 
 const signupUser = async (req, res) => {
   try {
@@ -33,7 +35,11 @@ const loginUser = async (req, res) => {
       return res.render("login", {
         error: "Invalid Username or Password",
       });
-    return res.redirect("/");
+
+    const sessionID = uuidv4();
+    setUser(sessionID, user);
+    res.cookie("uid", sessionID);
+    return res.redirect("/dashboard");
   } catch (error) {
     res.status(500).json({
       message: "Internal Server Error",
