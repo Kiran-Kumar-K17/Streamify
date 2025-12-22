@@ -1,10 +1,22 @@
 import { Router } from "express";
-import { restrictToLoggedinUserOnly } from "../middleware/authCheck.js";
+import {
+  restrictToLoggedinUserOnly,
+  restrictToAdminOnly,
+} from "../middleware/authCheck.js";
 const router = Router();
 
 router.get("/", (req, res) => {
   res.render("home");
 });
+
+router.get(
+  "/admin",
+  restrictToLoggedinUserOnly,
+  restrictToAdminOnly,
+  (req, res) => {
+    res.render("adminpage");
+  }
+);
 
 router.get("/dashboard", restrictToLoggedinUserOnly, (req, res) => {
   res.render("dashboard", { user: req.user });

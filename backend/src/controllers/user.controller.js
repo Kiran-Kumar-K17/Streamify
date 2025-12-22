@@ -1,11 +1,10 @@
 import { User } from "../models/user.model.js";
-import { v4 as uuidv4 } from "uuid";
 import { setUser, getUser } from "../utils/auth.js";
 
 const signupUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password || !role) {
       return res.status(200).json({
         message: "Provide All The Information",
       });
@@ -14,6 +13,7 @@ const signupUser = async (req, res) => {
       name,
       email,
       password,
+      role,
     });
     res.redirect("/");
   } catch (error) {
@@ -38,10 +38,12 @@ const loginUser = async (req, res) => {
 
     const token = setUser(user);
     res.cookie("uid", token);
-    return res.redirect("/dashboard");
+    return res.redirect(user.role === "admin" ? "/admin" : "/dashboard");
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({
       message: "Internal Server Error",
+      error: error.message,
     });
   }
 };
