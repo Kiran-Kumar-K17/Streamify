@@ -37,7 +37,10 @@ const loginUser = async (req, res) => {
       });
 
     const token = setUser(user);
-    res.cookie("uid", token);
+    res.cookie("uid", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    });
     return res.redirect(user.role === "admin" ? "/admin" : "/dashboard");
   } catch (error) {
     console.error("Login error:", error);

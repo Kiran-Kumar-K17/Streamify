@@ -3,6 +3,7 @@ import {
   restrictToLoggedinUserOnly,
   restrictToAdminOnly,
 } from "../middleware/authCheck.js";
+
 const router = Router();
 
 router.get("/", (req, res) => {

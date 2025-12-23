@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import userRoutes from "./routes/user.routes.js";
 import staticRouter from "./routes/staticRouter.js";
+import movieRoutes from "./routes/movie.route.js";
 import cookieParser from "cookie-parser";
 const app = express();
 
@@ -17,5 +18,6 @@ app.get("/", (req, res) => {
 });
 app.use("/", staticRouter);
 app.use("/user", userRoutes);
+app.use("/movie", movieRoutes);
 
 export default app;
