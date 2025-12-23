@@ -18,6 +18,6 @@ app.get("/", (req, res) => {
 });
 app.use("/", staticRouter);
 app.use("/user", userRoutes);
-app.use("/movie", movieRoutes);
+app.use("/movie", movieRoutes); //Adding Movies Meta-Data
 
 export default app;
