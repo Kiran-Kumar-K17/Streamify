@@ -38,6 +38,10 @@ const movieSchema = Schema(
       type: String,
       required: true,
     },
+    videoUrl: {
+      type: String,
+      required: true,
+    },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

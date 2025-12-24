@@ -2,28 +2,23 @@ import { Movie } from "../models/movie.model.js";
 
 const createMovies = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      genre,
-      releaseYear,
-      duration,
-      language,
-      thumbnailUrl,
-    } = req.body;
+    const { title, description, genre, releaseYear, duration, language } =
+      req.body;
 
-    if (
-      !title ||
-      !description ||
-      !genre ||
-      !releaseYear ||
-      !duration ||
-      !thumbnailUrl
-    ) {
+    if (!title || !description || !genre || !releaseYear || !duration) {
       return res.status(400).json({
         message: "All required fields must be provided",
       });
     }
+
+    if (!req.files?.video || !req.files?.thumbnail) {
+      return res.status(400).json({
+        message: "Video and thumbnail are required",
+      });
+    }
+
+    const videoUrl = `/uploads/videos/${req.files.video[0].filename}`;
+    const thumbnailUrl = `/uploads/thumbnails/${req.files.thumbnail[0].filename}`;
 
     const movie = await Movie.create({
       title,
@@ -32,6 +27,7 @@ const createMovies = async (req, res) => {
       releaseYear,
       duration,
       language,
+      videoUrl,
       thumbnailUrl,
       createdBy: req.user.id, // admin id from auth middleware
     });

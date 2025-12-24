@@ -16,8 +16,11 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.render("home");
 });
+app.use("/uploads", express.static("uploads"));
+
 app.use("/", staticRouter);
 app.use("/user", userRoutes);
-app.use("/movie", movieRoutes); //Adding Movies Meta-Data
+app.use("/movie", movieRoutes);
+//Adding Movies Meta-Data
 
 export default app;
