@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { createMovies } from "../controllers/movie.controller.js";
+import {
+  createMovies,
+  getMovies,
+  getMovieById,
+} from "../controllers/movie.controller.js";
 import { upload } from "../utils/multer.js";
 import {
   restrictToLoggedinUserOnly,
@@ -18,5 +22,8 @@ router.post(
   ]),
   createMovies
 );
+
+router.get("/", getMovies);
+router.get("/:id", getMovieById);
 
 export default router;

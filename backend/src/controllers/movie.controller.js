@@ -43,4 +43,54 @@ const createMovies = async (req, res) => {
   }
 };
 
-export { createMovies };
+const getMovies = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search, genre, year, language } = req.query;
+
+    const query = {};
+
+    // 🔍 Search (title)
+    if (search) {
+      query.title = { $regex: search, $options: "i" };
+    }
+
+    // 🎭 Filters
+    if (genre) query.genre = genre;
+    if (year) query.releaseYear = Number(year);
+    if (language) query.language = language;
+
+    const skip = (page - 1) * limit;
+
+    const movies = await Movie.find(query)
+      .select("title thumbnailUrl genre releaseYear")
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
+
+    const total = await Movie.countDocuments(query);
+
+    res.json({
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPages: Math.ceil(total / limit),
+      movies,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch movies" });
+  }
+};
+
+const getMovieById = async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+    res.json(movie);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch movie" });
+  }
+};
+
+export { createMovies, getMovies, getMovieById };
