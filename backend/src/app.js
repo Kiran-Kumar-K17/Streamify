@@ -5,6 +5,8 @@ import staticRouter from "./routes/staticRouter.js";
 import movieRoutes from "./routes/movie.route.js";
 import streamRoutes from "./routes/stream.route.js";
 import cookieParser from "cookie-parser";
+import watchRoutes from "./routes/watch.route.js";
+
 const app = express();
 
 app.set("view engine", "ejs");
@@ -15,6 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/stream", streamRoutes);
+app.use("/watch", watchRoutes);
+
 app.get("/", (req, res) => {
   res.render("home");
 });

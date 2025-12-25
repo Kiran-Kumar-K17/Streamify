@@ -1,18 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= movie.title %></title>
-  </head>
-  <body>
-    <h2><%= movie.title %></h2>
+<video id="player" width="800" controls>
+  <source src="/stream/<%= movie._id %>" type="video/mp4" />
+</video>
 
-    <video width="800" controls autoplay>
-      <source src="/stream/<%= movie._id %>" type="video/mp4" />
-    </video>
+<script>
+  const video = document.getElementById("player");
+  const movieId = "<%= movie._id %>";
 
-    <br /><br />
-    <a href="/dashboard">Back to Dashboard</a>
-  </body>
-</html>
+  // Load last progress
+  fetch(`/watch/progress/${movieId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.lastTime > 0) {
+        video.currentTime = data.lastTime;
+      }
+    });
+
+  // Save progress every 5 seconds
+  setInterval(() => {
+    fetch("/watch/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        movieId,
+        currentTime: video.currentTime,
+        completed: video.ended,
+      }),
+    });
+  }, 5000);
+</script>
