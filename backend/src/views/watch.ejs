@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= movie.title %></title>
+  </head>
+  <body>
+    <h2><%= movie.title %></h2>
+
+    <video width="800" controls autoplay>
+      <source src="/stream/<%= movie._id %>" type="video/mp4" />
+    </video>
+
+    <br /><br />
+    <a href="/dashboard">Back to Dashboard</a>
+  </body>
+</html>

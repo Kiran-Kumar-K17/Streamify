@@ -3,9 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>User Dashboard</title>
   </head>
   <body>
     <h2>Welcome</h2>
+
+    <h3>Available Movies</h3>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap">
+      <% movies.forEach(movie => { %>
+      <div style="border: 1px solid #ccc; padding: 10px">
+        <img src="<%= movie.thumbnailUrl %>" width="200" height="120" />
+        <h4><%= movie.title %></h4>
+        <a href="/watch/<%= movie._id %>">
+          <button>Play</button>
+        </a>
+      </div>
+      <% }) %>
+    </div>
   </body>
 </html>

@@ -4,6 +4,8 @@ import {
   restrictToAdminOnly,
 } from "../middleware/authCheck.js";
 
+import { Movie } from "../models/movie.model.js";
+
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -19,8 +21,14 @@ router.get(
   }
 );
 
-router.get("/dashboard", restrictToLoggedinUserOnly, (req, res) => {
-  res.render("dashboard", { user: req.user });
+router.get("/dashboard", restrictToLoggedinUserOnly, async (req, res) => {
+  const movies = await Movie.find().select("title thumbnailUrl");
+  res.render("dashboard", { user: req.user, movies });
+});
+
+router.get("/watch/:id", restrictToLoggedinUserOnly, async (req, res) => {
+  const movie = await Movie.findById(req.params.id);
+  res.render("watch", { movie });
 });
 
 router.get("/login", (req, res) => {
