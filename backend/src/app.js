@@ -6,6 +6,7 @@ import movieRoutes from "./routes/movie.route.js";
 import streamRoutes from "./routes/stream.route.js";
 import cookieParser from "cookie-parser";
 import watchRoutes from "./routes/watch.route.js";
+import methodOverride from "method-override";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.set("views", path.resolve("./src/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(methodOverride("_method"));
 
 app.use("/stream", streamRoutes);
 app.use("/watch", watchRoutes);

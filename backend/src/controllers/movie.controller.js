@@ -1,5 +1,5 @@
 import { Movie } from "../models/movie.model.js";
-
+import { deleteFile } from "../utils/file.js";
 const createMovies = async (req, res) => {
   try {
     const { title, description, genre, releaseYear, duration, language } =
@@ -93,4 +93,53 @@ const getMovieById = async (req, res) => {
   }
 };
 
-export { createMovies, getMovies, getMovieById };
+const updateMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    // Update metadata
+    Object.assign(movie, req.body);
+
+    // Replace video if uploaded
+    if (req.files?.video) {
+      deleteFile(movie.videoUrl);
+      movie.videoUrl = `/uploads/videos/${req.files.video[0].filename}`;
+    }
+
+    // Replace thumbnail if uploaded
+    if (req.files?.thumbnail) {
+      deleteFile(movie.thumbnailUrl);
+      movie.thumbnailUrl = `/uploads/thumbnails/${req.files.thumbnail[0].filename}`;
+    }
+
+    await movie.save();
+
+    res.json({ message: "Movie updated", movie });
+  } catch (error) {
+    res.status(500).json({ message: "Update failed" });
+  }
+};
+
+const deleteMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    deleteFile(movie.videoUrl);
+    deleteFile(movie.thumbnailUrl);
+
+    await movie.deleteOne();
+
+    res.json({ message: "Movie deleted successfully" });
+  } catch (error) {
+    console.error("DELETE MOVIE ERROR:", error);
+    res.status(500).json({ message: "Delete failed" });
+  }
+};
+
+export { createMovies, getMovies, getMovieById, updateMovie, deleteMovie };
